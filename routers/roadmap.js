@@ -73,10 +73,21 @@ router.post("/create", async (req, res) => {
             image
         } = req.body;
 
-        let skillIds = [];
+        //let skillIds = [];
+        //for(let index = 0; index < skills.length; ++index)
+        //{
+        //    skillIds.push(skills[index]._id);
+        //}
+
+        let editedSkills = [];
         for(let index = 0; index < skills.length; ++index)
         {
-            skillIds.push(skills[index]._id);
+            editedSkills.push({
+                _id: skills[index]._id,
+                imagePublicId: skills[index].imagePublicId,
+                imageSecureUrl: skills[index].imageSecureUrl,
+                name: skills[index].name
+            });
         }
 
         let publicId = "";
@@ -95,7 +106,7 @@ router.post("/create", async (req, res) => {
             name: name,
             computerLanguage: computerLanguage,
             framework: framework,
-            skills: skillIds,
+            skills: editedSkills,
             imagePublicId: publicId,
             imageSecureUrl: secureUrl
         })

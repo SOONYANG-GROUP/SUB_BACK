@@ -5,7 +5,14 @@ const RoadmapSchema = new Schema({
     name: String,
     computerLanguage: String,
     framework: String,
-    skills: [mongoose.Types.ObjectId],
+    skills: [
+        {
+            _id: mongoose.Types.ObjectId,
+            imagePublicId: String,
+            imageSecureUrl: String,
+            name: String
+        }
+    ],
     imagePublicId: {
         type: String
     },
