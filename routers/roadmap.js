@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const Skill = require("../models/Skill");
 const Roadmap = require("../models/Roadmap");
 const cloudinary = require("../utils/cloudinary");
 
@@ -176,14 +177,18 @@ router.post("/edit/:id", async(req, res) => {
         }
 
         let editedSkills = [];
+
         for(let index = 0; index < skills.length; ++index)
         {
-            editedSkills.push({
-                _id: skills[index]._id,
-                imagePublicId: skills[index].imagePublicId,
-                imageSecureUrl: skills[index].imageSecureUrl,
-                name: skills[index].name
-            })
+            await Skill.findOne({ _id: _id })
+            .then((foundSkill) => {
+                editedSkills.push({
+                    _id: foundSkill._id,
+                    imagePublicId: foundSkill.imagePublicId,
+                    imageSecureUrl: foundSkill.imageSecureUrl,
+                    name: foundSkill.name
+                })
+            });
         }
 
         await Roadmap.findOneAndReplace({ _id: _id }, {
