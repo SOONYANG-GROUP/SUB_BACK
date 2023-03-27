@@ -131,5 +131,89 @@ router.post("/create", async (req, res) => {
     }
 });
 
+router.post("/edit/:id", async(req, res) => {
+    const _id = req.params.id;
+    try
+    {
+        const {
+            name,
+            computerLanguage,
+            framework,
+            skills,
+            image,
+            isChanged
+        } = req.body;
+
+        let publicId = "";
+        let secureUrl = "";
+
+        await Roadmap.findOne({ _id: _id })
+        .then((foundRoadmap) => {
+            publicId = foundRoadmap.imagePublicId;
+            secureUrl = foundRoadmap.imageSecureUrl;
+        });
+
+        if(isChanged)
+        {
+            cloudinary.uploader.destroy(publicId, function(result){
+                console.log(result);
+            });
+
+            if(image !== null)
+            {
+                const cloudinaryResult = await cloudinary.uploader.upload(image, {
+                    folder: "roadmaps"
+                });
+
+                publicId = cloudinaryResult.public_id;
+                secureUrl = cloudinaryResult.secure_url;
+            }
+            else
+            {
+                publicId = "";
+                secureUrl = "";
+            }
+        }
+
+        let editedSkills = [];
+        for(let index = 0; index < skills.length; ++index)
+        {
+            editedSkills.push({
+                _id: skills[index]._id,
+                imagePublicId: skills[index].imagePublicId,
+                imageSecureUrl: skills[index].imageSecureUrl,
+                name: skills[index].name
+            })
+        }
+
+        await Roadmap.findOneAndReplace({ _id: _id }, {
+            name: name,
+            computerLanguage: computerLanguage,
+            framework: framework,
+            skills: editedSkills,
+            imagePublicId: publicId,
+            imageSecureUrl: secureUrl
+        })
+        .then((editedRoadmap) => {
+            return res.status(200).send({
+                _id: editedRoadmap._id
+            });
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).send({
+                message: "Server Error"
+            })
+        })
+    }
+    catch(error)
+    {
+        console.error(error);
+        return res.status(500).send({
+            message: "Server Error"
+        })
+    }
+});
+
 
 module.exports = router;
