@@ -69,7 +69,9 @@ router.post("/create", async (req, res) => {
             name,
             references,
             studyTip,
-            image
+            image,
+            category,
+            helloworld
         } = req.body;
 
         let publicId = "";
@@ -88,7 +90,9 @@ router.post("/create", async (req, res) => {
             references: references,
             studyTip: studyTip,
             imagePublicId: publicId,
-            imageSecureUrl: secureUrl
+            imageSecureUrl: secureUrl,
+            category: category,
+            helloworld: helloworld
         })
         .then((createdSkill) => {
             return res.status(200).send({
@@ -121,7 +125,9 @@ router.post("/edit/:id", async (req, res) => {
             studyTip,
             references,
             isChanged,
-            image
+            image,
+            category,
+            helloworld
         } = req.body;
 
         let publicId = "";
@@ -162,7 +168,9 @@ router.post("/edit/:id", async (req, res) => {
             studyTip: studyTip,
             references: references,
             imagePublicId: publicId,
-            imageSecureUrl: secureUrl
+            imageSecureUrl: secureUrl,
+            category: category,
+            helloworld: helloworld
         }).then((editedSkill) => {
             return res.status(200).send({
                 _id: editedSkill._id

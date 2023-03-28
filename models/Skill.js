@@ -10,6 +10,12 @@ const SkillSchema = new Schema({
     },
     imageSecureUrl: {
         type: String
+    },
+    helloworld: {
+        type: String
+    },
+    category: {
+        type: String
     }
 });
 

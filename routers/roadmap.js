@@ -4,6 +4,7 @@ const Roadmap = require("../models/Roadmap");
 const cloudinary = require("../utils/cloudinary");
 
 router.get("/one/:id", async (req, res) => {
+    console.log(req.params.id)
     const _id = req.params.id;
     try
     {
@@ -71,7 +72,9 @@ router.post("/create", async (req, res) => {
             skills,
             framework,
             computerLanguage,
-            image
+            image,
+            field,
+            references
         } = req.body;
 
         //let skillIds = [];
@@ -109,7 +112,9 @@ router.post("/create", async (req, res) => {
             framework: framework,
             skills: editedSkills,
             imagePublicId: publicId,
-            imageSecureUrl: secureUrl
+            imageSecureUrl: secureUrl,
+            field: field,
+            references: references,
         })
         .then((createdRoadmap) => {
             return res.status(200).send({
@@ -142,8 +147,11 @@ router.post("/edit/:id", async(req, res) => {
             framework,
             skills,
             image,
-            isChanged
+            isChanged,
+            references,
+            field
         } = req.body;
+        console.log(req.body);
 
         let publicId = "";
         let secureUrl = "";
@@ -180,7 +188,7 @@ router.post("/edit/:id", async(req, res) => {
 
         for(let index = 0; index < skills.length; ++index)
         {
-            await Skill.findOne({ _id: _id })
+            await Skill.findOne({ _id: skills[index]._id })
             .then((foundSkill) => {
                 editedSkills.push({
                     _id: foundSkill._id,
@@ -197,7 +205,9 @@ router.post("/edit/:id", async(req, res) => {
             framework: framework,
             skills: editedSkills,
             imagePublicId: publicId,
-            imageSecureUrl: secureUrl
+            imageSecureUrl: secureUrl,
+            references: references,
+            field: field
         })
         .then((editedRoadmap) => {
             return res.status(200).send({

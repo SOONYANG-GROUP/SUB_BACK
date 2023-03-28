@@ -18,7 +18,11 @@ const RoadmapSchema = new Schema({
     },
     imageSecureUrl: {
         type: String
-    }
+    },
+    field: {
+        type: String
+    },
+    references: [String]
 });
 
 const Roadmap = mongoose.model("Roadmap", RoadmapSchema);
