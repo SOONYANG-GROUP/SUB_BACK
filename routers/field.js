@@ -59,29 +59,80 @@ router.post("/edit/", async (req, res) => {
 
     try
     {
-        if(isFieldChanged)
+
+        const isFieldExisted = await Field.findOne({ name: currentFieldName });
+        if(!isFieldExisted)
         {
-            return res.status(200).send({
-                field: currentFieldName
+            const foundField = await Field.findOne({ name: exFieldName })
+            let editedFoundDetailField = foundField.detailFields;
+            const indexOfName = editedFoundDetailField.indexOf(name);
+            editedFoundDetailField.splice(indexOfName, 1);
+
+            await Field.findOneAndReplace({
+                name: exFieldName
+            }, {
+                name: exFieldName,
+                detailFields: editedFoundDetailField
+            });
+
+
+            await Field.create({ name: currentFieldName, detailFields: [ name ] })
+            .then(() => {
+                return res.status(200).send({
+                    field: currentFieldName
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                throw err;
             })
         }
         else
         {
-            const foundField = await Field.findOne({ name: exFieldName })
-            
-            let editedFoundDetailField = foundField.detailFields;
-            const indexOfName = editedFoundDetailField.indexOf(name);
-            editedFoundDetailField.splice(indexOfName, 1);
-            await Field.findOneAndReplace({
-                name: exFieldName
-            }, {
-                name: currentFieldName,
-                detailFields: editedFoundDetailField
-            })
-            return res.status(200).send({
-                field: currentFieldName
-            })            
+            if(isFieldChanged)
+            {
+                const foundField = await Field.findOne({ name: exFieldName })
+                
+                let editedFoundDetailField = foundField.detailFields;
+                const indexOfName = editedFoundDetailField.indexOf(name);
+                editedFoundDetailField.splice(indexOfName, 1);
+
+                await Field.findOneAndReplace({
+                    name: exFieldName
+                }, {
+                    name: exFieldName,
+                    detailFields: editedFoundDetailField
+                });
+
+
+                let editedCurrentDetailFields = isFieldExisted.detailFields;
+                editedCurrentDetailFields.push(name)
+                
+                await Field.findOneAndReplace({
+                    name: currentFieldName
+                }, {
+                    name: currentFieldName,
+                    detailFields: editedCurrentDetailFields
+                })
+                .then((editedField) => {
+                    return res.status(200).send({
+                        field: currentFieldName
+                    })
+                })
+                .catch((err) => {
+                    console.error(err);
+                    throw err;
+                })
+            }
+            else
+            {
+                return res.status(200).send({
+                    field: currentFieldName
+                })
+            }
         }
+
+
     }
     catch(error)
     {
