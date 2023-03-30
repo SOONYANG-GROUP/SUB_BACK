@@ -2,6 +2,37 @@ const router = require('express').Router();
 const Field = require("../models/Field");
 
 
+router.get("/detail/:name", async(req, res) => {
+    let { name } = req.params;
+    try
+    {
+        if(name === "frontend")
+            name = "프론트 엔드";
+        else if(name === "backend")
+            name = "백 엔드";
+        else
+            name = "해킹 및 보안";
+
+        await Field.find({ name: name })
+        .then((foundFields) => {
+            return res.status(200).send({
+                field: foundFields
+            });
+        })
+        .catch((err) => {
+            console.error(err);
+            throw err;
+        })
+    }
+    catch(error)
+    {
+        console.error(error);
+        return res.status(500).send({
+            message: "Server Error"
+        });
+    }
+})
+
 router.post("/create", async(req, res) => {
     const { fieldName, name } = req.body;
     try

@@ -14,8 +14,19 @@ const SkillSchema = new Schema({
     helloworld: {
         type: String
     },
+    downloadLibrary: {
+        type: String
+    },
     category: {
         type: String
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    renewalDate: {
+        type: Date,
+        default: Date.now()
     }
 });
 

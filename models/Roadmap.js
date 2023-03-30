@@ -22,7 +22,15 @@ const RoadmapSchema = new Schema({
     field: {
         type: String
     },
-    references: [String]
+    references: [String],
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    renewalDate: {
+        type: Date,
+        default: Date.now()
+    }
 });
 
 const Roadmap = mongoose.model("Roadmap", RoadmapSchema);
