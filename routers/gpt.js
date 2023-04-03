@@ -33,7 +33,6 @@ router.post("/project/idea", async (req, res) => {
 
 router.post("/skill/problem", async (req, res) => {
     const { skillName } = req.body;
-    console.log(skillName)
     const skillContent = `${skillName}을 이용해 초보자가 풀 수 있는 문제 1개 문제를 150개 단어 내로 알려줘. 다만, 문제에 대한 상세 설명, 구현 방법, 푸는 방법, 힌트는 알려주지 마`
     try
     {
@@ -43,6 +42,7 @@ router.post("/skill/problem", async (req, res) => {
                 {"role": role, "content": skillContent}
             ]
         });
+        console.log(response);
 
         return res.status(200).send({
             data: response.data

@@ -15,14 +15,12 @@ app.use(express.urlencoded({extended: false}));
 const roadmapRouter = require("./routers/roadmap");
 const indexRouter = require("./routers/index");
 const skillRouter = require('./routers/skill');
-const uploadRouter = require("./routers/upload");
 const gptRouter = require("./routers/gpt");
 const fieldRouter = require("./routers/field");
 
 app.use("/", indexRouter);
 app.use("/roadmap", roadmapRouter);
 app.use("/skill", skillRouter);
-app.use("/upload", uploadRouter);
 app.use("/gpt", gptRouter);
 app.use("/field", fieldRouter);
 
