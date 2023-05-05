@@ -9,6 +9,22 @@ const openai = new OpenAIApi(configuration);
 const role = "user";
 const ideaContent = "초보 개발자 5명이 14일동안 개발할 수 있는 재미있고 유용한 사이드 프로젝트 하나만 추천해줘"
 
+const GetSpeechSummaryText = (messages) => {
+    const head = "너에게 회의 중 나온 말들을 전달할거야. 한 마디 말은 | 기호를 사용해서 구분했어. \n"
+    const want = "회의 중 나온 말들을 전부 종합해서 회의의 총 주제(subject), 전체 회의 주제 요약 내용(summary)을 나에게 알려줘 \n"
+    const subwant = "OBJECT 형식으로 만들어주면 좋을 것 같아. 예를 들어, {subject: '', summary: ''} 이제부터 밑에있는 말은 회의에서 나온 말들이야\n\n"
+    
+    let body = ""
+    for(let index = 0; index < messages.length; ++index)
+    {
+        body += messages[index]
+        body += '|'
+    }
+    body += '\n'
+    
+    return head + want + subwant + body
+}
+
 const GetSummaryText = (messagesPerUser) => {
     const head = "너에게 회의 참석자와 그 참석자가 말한 내용에 대해 알려줄거야. \n";
     const want = "회의 참석자가 나눈 대화를 바탕으로 회의에 대한 총 주제(subject), 회의 참석자별(participant1, participant2, ...)로 말한 내용을 약 20단어로 요약하고, 전체 회의 주제 요약 내용(summary)을 나에게 알려줘 \n"
@@ -76,6 +92,39 @@ router.post('/time-line', async(req, res) => {
         console.error(error);
     }
 });
+
+router.post('/transcript', async (req, res) => {
+    const messages = req.body.messages;
+    try
+    {
+        if(messages.length === 0)
+        {
+            return res.status(400).send({
+                message: "message의 내용이 존재하지 않습니다."
+            });
+        }
+        else
+        {
+            const content = GetSpeechSummaryText(messages);
+            const response = await openai.createChatCompletion({
+                model: "gpt-3.5-turbo",
+                messages: [
+                    { "role": role, "content": content }
+                ]
+            })
+            return res.status(200).send({
+                data: response.data
+            })
+        }
+    }
+    catch(error)
+    {
+        console.error(error);
+        return res.status(500).send({
+            error: error
+        });
+    }
+})
 
 router.post("/project/idea", async (req, res) => {
     try
