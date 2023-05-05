@@ -10,8 +10,10 @@ const role = "user";
 const ideaContent = "초보 개발자 5명이 14일동안 개발할 수 있는 재미있고 유용한 사이드 프로젝트 하나만 추천해줘"
 
 const GetSummaryText = (messagesPerUser) => {
-    const head = "너에게 회의 참석자와 그 참석자가 말한 내용에 대해 알려줄거야. 회의 참석자별로 말한 내용을 약 20단어로 요약해서 나에게 알려줘 \n";
-    let body = "";
+    const head = "너에게 회의 참석자와 그 참석자가 말한 내용에 대해 알려줄거야. \n";
+    const want = "회의 참석자가 나눈 대화를 바탕으로 회의에 대한 총 주제(subject), 회의 참석자별(participant1, participant2, ...)로 말한 내용을 약 20단어로 요약하고, 전체 회의 주제 요약 내용(summary)을 나에게 알려줘 \n"
+    let subwant = "OBJECT 형식으로 만들어주면 좋을 것 같아. 예를 들어, { subject: '', summary: '', participant1: '', participant2: '',...} 이런 형식으로, 그리고 participant라는 key 값을 회의 참석자 이름으로 바꿔줘 예를 들어, 회의 참석자 이름이 형일이면 key 값이 participant1, participant2, ...가 아닌 '형일'이런 식으로 만들어줘\n";
+    let body = ""
     let contents = [];
 
     for(const user in messagesPerUser)
@@ -32,7 +34,7 @@ const GetSummaryText = (messagesPerUser) => {
         body += contents[index];
     }
 
-    return head + body;
+    return head + want + subwant + body;
 }
 
 router.post('/time-line', async(req, res) => {
