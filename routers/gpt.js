@@ -31,7 +31,7 @@ const GetSummaryText = (messagesPerUser) => {
   const head =
     "너에게 회의 참석자와 그 참석자가 말한 내용에 대해 알려줄거야. \n";
   const want =
-    "회의 참석자가 나눈 대화를 바탕으로 회의에 대한 총 주제(title) 로 말한 내용을 약 20단어로 요약하고, 전체 회의 주제 요약 내용 및 어떤 내용을 누가 말했는지 요약해서 (description)을 나에게 알려줘 description은 모두 문자열이여야해 \n";
+    "회의 참석자가 나눈 대화를 바탕으로 회의에 대한 총 주제(title) 로 말한 내용을 약 20단어로 요약하고, 전체 회의 주제 요약 내용 및 어떤 내용을 누가 말했는지 요약해서 (description)을 나에게 알려줘 description은 모두 String이여야해 \n";
   let subwant =
     "JSON 형식만 반환해줘. 예를 들어, { title: '', description: '',} 이런 형식으로,\n";
   let body = "";
